@@ -2,42 +2,45 @@ from typing import Callable
 
 
 def euler_step_2d(
-    x0: float,
-    y0: float,
+    prevX: float,
+    prevY: float,
     dt: float,
-    f: Callable[[float, float], float],
-    g: Callable[[float, float], float],
+    dx_dt: Callable[[float, float], float],
+    dy_dt: Callable[[float, float], float],
 ) -> tuple[float, float]:
     """
     Euler time stepping method for solving 2D ODEs.
     """
-    x = x0 + dt * f(x0, y0)
-    y = y0 + dt * g(x0, y0)
-    return x, y
+    newX = prevX + dt * dx_dt(prevX, prevY)
+    newY = prevY + dt * dy_dt(prevX, prevY)
+    return newX, newY
 
 
 def midpoint_step_2d(
-    x0: float,
-    y0: float,
+    prevX: float,
+    prevY: float,
     dt: float,
-    f: Callable[[float, float], float],
-    g: Callable[[float, float], float],
+    dx_dt: Callable[[float, float], float],
+    dy_dt: Callable[[float, float], float],
 ) -> tuple[float, float]:
     """
     Midpoint method for solving 2D ODEs.
     """
-    x_mid = x0 + dt / 2 * f(x0, y0)
-    y_mid = y0 + dt / 2 * g(x0, y0)
-    x = x0 + dt * f(x_mid, y_mid)
-    y = y0 + dt * g(x_mid, y_mid)
-    return x, y
+    midX = prevX + dt / 2 * dx_dt(prevX, prevY)
+    midY = prevY + dt / 2 * dy_dt(prevX, prevY)
+    newX = prevX + dt * dx_dt(midX, midY)
+    newY = prevY + dt * dy_dt(midX, midY)
+    return newX, newY
 
 
 def dx_dtWithParams(I: float = 0) -> Callable[[float, float], float]:
     """
     Returns a dx/dt function with the given parameters
     """
-    return lambda x, y: _dx_dt(x, y, I)
+    # Create a function that returns the dx/dt function with the given parameters
+    def dx_dt(x, y):
+        return _dx_dt(x, y, I)
+    return dx_dt
 
 
 def dy_dtWithParams(
@@ -46,8 +49,10 @@ def dy_dtWithParams(
     """
     Returns a dy/dt function with the given parameters
     """
-    return lambda x, y: _dy_dt(x, y, mu, a, b)
-
+    # Creates a function that returns the dy/dt function with the given parameters
+    def dy_dt(x, y):
+        return _dy_dt(x, y, mu, a, b)
+    return dy_dt
 
 def _dx_dt(x: float, y: float, I: float) -> float:
     return x - 1 / 3 * x**3 - y + I

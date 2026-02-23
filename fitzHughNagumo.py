@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+# Import the helpers module
 from helpers import *
 
 
@@ -7,11 +8,12 @@ def fitzHughNagumoModel(
     x0: float, y0: float, dt: float, endTime: float, params: FitzHughNagumoModelParams
 ) -> tuple[float, float]:
     positionValues = [np.array([x0, y0])]
-    # Check if the endTime is a multiple of the dt
     numSteps = int(endTime / dt)
 
     for i in range(numSteps):
         # Gets the dx/dt and dy/dt functions with the parameters so we can time step the model
+        # The euler method requires a dx_dt and dy_dt function with two parameters (x, y)
+        # So by using dx_dtWithParams and dy_dtWithParams, we can pass the parameters (I, mu, a, b) to the functions
         dx_dt = dx_dtWithParams(params.I)
         dy_dt = dy_dtWithParams(params.mu, params.a, params.b)
         # Run the euler method with the current position and the parameters
@@ -21,10 +23,11 @@ def fitzHughNagumoModel(
         # Append the new position to the list of position values
         positionValues.append(np.array([x, y]))
 
+    # Return the position values as a numpy array
     return np.array(positionValues)
 
-
 # Main function
+# This code here checks if the file is being run directly and not imported as a module
 if __name__ == "__main__":
     # Define the parameters for the FitzHugh-Nagumo model
     IValues = np.linspace(0, 2, 11)
@@ -37,8 +40,11 @@ if __name__ == "__main__":
     endTime = 100
     # Run the FitzHugh-Nagumo model for each value of I
     for I in IValues:
+        # Create the parameters for the FitzHugh-Nagumo model
+        params = FitzHughNagumoModelParams(I, mu, a, b)
+        # Run the FitzHugh-Nagumo model for the current value of I
         positionValues = fitzHughNagumoModel(
-            x0, y0, dt, endTime, FitzHughNagumoModelParams(I, mu, a, b)
+            x0, y0, dt, endTime, params
         )
         # Plot the position values on a graph
         xValues = positionValues[:, 0]
