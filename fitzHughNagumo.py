@@ -19,6 +19,9 @@ def fitzHughNagumoModel(
         dy_dt = dy_dtWithParams(params.mu, params.a, params.b)
         # Run the euler method with the current position and the parameters
         x, y = euler_step_2d(
+            # positionValues[-1] indicates the last position, 
+            # 0 indicates the x value 
+            # 1 indicates the y value
             positionValues[-1][0], positionValues[-1][1], dt, dx_dt, dy_dt
         )
         # Append the new position to the list of position values
