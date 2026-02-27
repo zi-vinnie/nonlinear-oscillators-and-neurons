@@ -1,11 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 # Import the helpers module
 from helpers import *
 
 
 def fitzHughNagumoModel(
-    x0: float, y0: float, dt: float, endTime: float, params: FitzHughNagumoModelParams
+    x0: float, y0: float, dt: float, endTime: float, params: ModelParams
 ) -> tuple[float, float]:
     positionValues = [np.array([x0, y0])]
     numSteps = int(endTime / dt)
@@ -35,13 +36,15 @@ if __name__ == "__main__":
     a = 0.8
     b = 0.7
     x0 = 2
-    y0 = 1
+    y0 = 0
     dt = 0.1
     endTime = 100
+
+    fig, axs = plt.subplots()
     # Run the FitzHugh-Nagumo model for each value of I
     for I in IValues:
         # Create the parameters for the FitzHugh-Nagumo model
-        params = FitzHughNagumoModelParams(I, mu, a, b)
+        params = ModelParams(I, mu, a, b)
         # Run the FitzHugh-Nagumo model for the current value of I
         positionValues = fitzHughNagumoModel(
             x0, y0, dt, endTime, params
@@ -49,5 +52,11 @@ if __name__ == "__main__":
         # Plot the position values on a graph
         xValues = positionValues[:, 0]
         yValues = positionValues[:, 1]
-        plt.plot(xValues, yValues)
-    plt.show()
+        axs.plot(xValues, yValues)
+    # Save the figure
+    # Check if the directory exists, if not create it
+    if not os.path.exists("FitzHughNagumo"):
+        os.makedirs("FitzHughNagumo")
+
+    fig.savefig("FitzHughNagumo/fitzHughNagumo.png", dpi=300)
+

@@ -1,6 +1,5 @@
 from typing import Callable
 
-
 def euler_step_2d(
     prevX: float,
     prevY: float,
@@ -14,7 +13,6 @@ def euler_step_2d(
     newX = prevX + dt * dx_dt(prevX, prevY)
     newY = prevY + dt * dy_dt(prevX, prevY)
     return newX, newY
-
 
 def midpoint_step_2d(
     prevX: float,
@@ -32,7 +30,6 @@ def midpoint_step_2d(
     newY = prevY + dt * dy_dt(midX, midY)
     return newX, newY
 
-
 def dx_dtWithParams(I: float = 0) -> Callable[[float, float], float]:
     """
     Returns a dx/dt function with the given parameters
@@ -41,7 +38,6 @@ def dx_dtWithParams(I: float = 0) -> Callable[[float, float], float]:
     def dx_dt(x, y):
         return _dx_dt(x, y, I)
     return dx_dt
-
 
 def dy_dtWithParams(
     mu: float, a: float = 0, b: float = 0
@@ -57,12 +53,10 @@ def dy_dtWithParams(
 def _dx_dt(x: float, y: float, I: float) -> float:
     return x - 1 / 3 * x**3 - y + I
 
-
 def _dy_dt(x: float, y: float, mu: float, a: float, b: float) -> float:
     return 1 / mu * (x - a * y + b)
 
-
-class FitzHughNagumoModelParams:
+class ModelParams:
     def __init__(self, I: float, mu: float, a: float, b: float):
         self.I = I
         self.mu = mu
