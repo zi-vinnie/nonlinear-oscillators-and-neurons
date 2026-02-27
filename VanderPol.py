@@ -50,7 +50,7 @@ if __name__ == "__main__":
     x0 = 2
     y0 = 0
     dt = 0.1
-    endTime = 33
+    endTime = 30
 
     fig, axs = plt.subplots()
     # Run the Van der Pol model for each value of I
@@ -66,8 +66,12 @@ if __name__ == "__main__":
         yValues = positionValues[:, 1]
         xValues2 = positionValues2[:, 0] 
         yValues2 = positionValues2[:, 1]
-        #axs.plot(xValues, yValues)
-        axs.plot(xValues2, yValues2, linestyle = "--")
+        axs.plot(xValues, yValues, color = "darkblue", label = "m")
+        axs.plot(xValues2, yValues2, linestyle = "--", color = "red", label = "r")
+        axs.set_title("Forward Euler & Midpoint Method for Van der Pol Equation")
+        axs.set_xlabel("X position")
+        axs.set_ylabel("Y position")
+        axs.legend()
     # Save the figure
     # Check if the directory exists, if not create it
     if not os.path.exists("VanderPol"):
