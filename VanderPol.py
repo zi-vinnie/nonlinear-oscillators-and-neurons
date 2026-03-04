@@ -79,4 +79,41 @@ if __name__ == "__main__":
 
     fig.savefig("VanderPol/vanderpol.png", dpi=300)
 
+# Section 1.2 Convergence of the midpoint method
+# I am going to define the parameters for the time stepping scheme
+mu = 10
+a = 0
+b = 0
+x0 = 2
+y0 = 0
+dt = 0.00000001
+endTime = 10
+params = ModelParams(0, mu, 0, 0)
+
+# Setting the initial arrays
+Error = []
+dt = 0.00000001
+
+# This finds all of the values for the given paraemters up to endTime = 10
+RefArray, yRefArray = VanderPolModel(2.0, 0.0, dt, 10.0, params) 
+
+# These are defining my reference value
+xRefSol = RefArray[-1][0]
+yRefSol = RefArray[-1][1]
+print("before loop") 
+
+for j in range (6): 
+    dt = dt*10 
+    TempArray = VanderPolModel(2.0, 0.0, dt, 10.0, params)
+    xTempSol = TempArray[-1][0]
+    yTempSol = TempArray[-1][1]
+    tempError = ((xRefSol - xTempSol)**0.5 + (yRefSol - yTempSol)**2)**0.5
+    Error.append(tempError) 
+    dt.append(dt) 
+
+ax.set_xscale("log", base=10)
+ax.set_yscale("log", base=10) 
+ax.plot(Error, dt)
+
+    
     
