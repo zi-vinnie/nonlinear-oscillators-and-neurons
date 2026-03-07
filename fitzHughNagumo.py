@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+
 # Import the helpers module
 from helpers import *
 
@@ -34,7 +35,7 @@ def fitzHughNagumoModel(
 # This code here checks if the file is being run directly and not imported as a module
 if __name__ == "__main__":
     # Define the parameters for the FitzHugh-Nagumo model
-    IValues = np.linspace(0, 2, 11)
+    IValues = np.linspace(0, 2, 3)
     mu = 10
     a = 0.8
     b = 0.7
@@ -42,6 +43,7 @@ if __name__ == "__main__":
     y0 = 0
     dt = 0.1
     endTime = 100
+    xAxisValues = np.linspace(-2, 2, 100)
 
     fig, axs = plt.subplots()
     # Run the FitzHugh-Nagumo model for each value of I
@@ -56,10 +58,20 @@ if __name__ == "__main__":
         xValues = positionValues[:, 0]
         yValues = positionValues[:, 1]
         axs.plot(xValues, yValues)
+        xNullcline = xNullclineWithParams(I)
+        xNullclineValues = xNullcline(xAxisValues)
+        axs.plot(xAxisValues, xNullclineValues, linestyle = "--", color = "red", label = f"x Nullcline I = {I}")
+
+    yNullcline = yNullclineWithParams(a, b)
+    yNullclineValues = yNullcline(xAxisValues)
+    axs.plot(xAxisValues, yNullclineValues, linestyle = "--", color = "blue", label = f"y Nullcline")
+    axs.legend()
+    axs.set_title("FitzHugh-Nagumo Model Phase Portrait")
+    axs.set_xlabel("X")
+    axs.set_ylabel("Y")
     # Save the figure
     # Check if the directory exists, if not create it
     if not os.path.exists("FitzHughNagumo"):
         os.makedirs("FitzHughNagumo")
 
     fig.savefig("FitzHughNagumo/fitzHughNagumo.png", dpi=300)
-
