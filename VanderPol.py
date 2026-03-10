@@ -8,6 +8,7 @@ def VanderPolModel(
 ) -> tuple[np.array, np.array]:
     eulerPositionValues = [np.array([x0, y0])]
     midpointPositionValues = [np.array([x0, y0])]
+    dt = []
     for _ in range(numSteps):
         # Gets the dx/dt and dy/dt functions with the parameters so we can time step the model
         # The euler method requires a dx_dt and dy_dt function with two parameters (x, y)
@@ -24,8 +25,9 @@ def VanderPolModel(
         
         eulerPositionValues.append(np.array([eulerX, eulerY]))
         midpointPositionValues.append(np.array([midpointX,midpointY]))
+        dt.append(_dt)
     # Return the two lists of position values as numpy arrays
-    return np.array(eulerPositionValues), np.array(midpointPositionValues)
+    return np.array(eulerPositionValues), np.array(midpointPositionValues), dt
 
 # Main function
 # This code here checks if the file is being run directly and not imported as a module
@@ -47,7 +49,7 @@ if __name__ == "__main__":
     params = ModelParams(I, mu, a, b)
 
     # Run the Van der Pol model
-    eulerPositions, midpointPositions = VanderPolModel(
+    eulerPositions, midpointPositions, time1 = VanderPolModel(
         x0, y0, endTime / numSteps, numSteps, params
     )
 
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     # Setting the initial arrays
 
     # This finds all of the values for the given paraemters up to endTime = 10
-    eulerPositionsRef, midpointPositionsRef = VanderPolModel(x0, y0, endTime / numSteps, numSteps, params)
+    eulerPositionsRef, midpointPositionsRef, time2 = VanderPolModel(x0, y0, endTime / numSteps, numSteps, params)
 
     # These are defining my reference values
     referenceFinalPosition = midpointPositionsRef[-1]
@@ -102,7 +104,7 @@ if __name__ == "__main__":
     dtValues = endTime / numStepsValues
     errors = []
     for numSteps in numStepsValues:
-        eulerPositions, midpointPositions = VanderPolModel(x0, y0, endTime / numSteps, numSteps, params)
+        eulerPositions, midpointPositions, time3 = VanderPolModel(x0, y0, endTime / numSteps, numSteps, params)
         finalPosition = midpointPositions[-1]
         err = np.linalg.norm(referenceFinalPosition - finalPosition)
         errors.append(err)
