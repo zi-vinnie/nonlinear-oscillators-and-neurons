@@ -25,7 +25,7 @@ def VanderPolModel(
         
         eulerPositionValues.append(np.array([eulerX, eulerY]))
         midpointPositionValues.append(np.array([midpointX,midpointY]))
-        dt.append(_dt)
+        dt.append(_*dt)
     # Return the two lists of position values as numpy arrays
     return np.array(eulerPositionValues), np.array(midpointPositionValues), dt
 
